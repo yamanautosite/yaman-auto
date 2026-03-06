@@ -14,7 +14,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 cloudinary.config({
   cloud_name: 'djcmmlnz4', 
   api_key: '898543896878648',
-  api_secret: 'BURAYA_GIZLI_SECRET_ANAHTARINI_YAZ' // <--- Mavi butondan aldığın secret'ı buraya yapıştır!
+  api_secret: 'A3aMt2AQYyOhn7dyO3ZHSHmiV-M' // <--- Mavi butondan aldığın secret'ı buraya yapıştır!
 });
 
 const storage = new CloudinaryStorage({
