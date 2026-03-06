@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satılık Araçlar | Yaman Auto</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='/'" style="cursor: pointer;">
+                <img src="/images/logo.png" alt="Yaman Auto Logo" class="yaman-final-logo">
+                YAMAN AUTO
+            </div>
+            <nav>
+                <a href="/">Ana Sayfa</a>
+                <a href="/satilik-araclar">Satılık Araçlar</a>
+                <a href="/hakkimizda">Hakkımızda</a>
+                <a href="/iletisim">İletişim</a>
+            </nav>
+            <div class="header-right">
+                <span class="phone-text"><i class="fas fa-phone"></i> 0532 236 55 37</span>
+                <a href="https://wa.me/905322365537" class="whatsapp-nav" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-layout" id="araclar" style="margin-top: 30px;">
+        <aside class="filter-sidebar">
+            <div class="filter-title"><h3><i class="fas fa-filter"></i> Araç Filtrele</h3></div>
+            <form action="/satilik-araclar" method="GET" id="filterForm">
+                <select name="marka" id="markaSec" onchange="modelleriGuncelle()">
+                    <option value="">Marka Seç</option>
+                </select>
+                
+                <select name="model" id="modelSec">
+                    <option value="">Model Seç</option>
+                </select>
+
+                <div class="range-group" style="display: flex; gap: 5px; margin-bottom: 15px;">
+                    <input type="number" name="minFiyat" placeholder="Min TL" style="width: 50%;">
+                    <input type="number" name="maxFiyat" placeholder="Max TL" style="width: 50%;">
+                </div>
+
+                <div class="range-group" style="display: flex; gap: 5px; margin-bottom: 15px;">
+                    <input type="number" name="minKM" placeholder="Min KM" style="width: 50%;">
+                    <input type="number" name="maxKM" placeholder="Max KM" style="width: 50%;">
+                </div>
+
+                <select name="yakit">
+                    <option value="">Yakıt Türü</option>
+                    <option value="Benzin">Benzin</option>
+                    <option value="Dizel">Dizel</option>
+                    <option value="LPG">LPG</option>
+                    <option value="Hibrit">Hibrit</option>
+                    <option value="Elektrik">Elektrik</option>
+                </select>
+
+                <button type="submit" class="btn-filter">ARAÇLARI BUL</button>
+                <a href="/satilik-araclar" style="display:block; text-align:center; margin-top:10px; font-size:12px; color:#666; text-decoration:none;">Filtreleri Sıfırla</a>
+            </form>
+            
+            <div class="total-count" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                Toplam <strong><%= araclar.length %></strong> Araç Listeleniyor
+            </div>
+        </aside>
+
+        <section class="content-area">
+            <div class="section-header" style="margin-bottom: 20px;">
+                <h2 style="color: var(--yaman-blue);"><i class="fas fa-car"></i> Güncel Stok Durumu</h2>
+            </div>
+            
+            <div class="vehicle-grid">
+                <% if(araclar.length > 0) { %>
+                    <% araclar.forEach(arac => { %>
+                        <div class="vehicle-card" onclick="location.href='/arac/<%= arac.id %>?from=inventory'" style="cursor: pointer;">
+                            <div class="card-img-box"><img src="<%= arac.resim %>" alt="<%= arac.marka %>"></div>
+                            <div class="card-body-content">
+                                <h3><%= arac.yil %> <%= arac.marka %> <%= arac.model %></h3>
+                                <p class="specs-info"><%= arac.km %> KM | <%= arac.yakit %></p>
+                                <div class="card-price-row">
+                                    <span class="price-val"><%= arac.fiyat %></span>
+                                    <a href="/arac/<%= arac.id %>?from=inventory" class="btn-go-detail" onclick="event.stopPropagation();">Detay</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 15px;">
+                        <i class="fas fa-search" style="font-size: 50px; color: #ddd; margin-bottom: 20px;"></i>
+                        <p style="font-size: 18px; color: #666;">Aradığınız kriterlere uygun araç bulunamadı.</p>
+                        <a href="/satilik-araclar" style="color: var(--yaman-blue); font-weight: bold; text-decoration: underline;">Tüm Araçları Göster</a>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>© 2026 <strong>Yaman Auto</strong> - Tüm Hakları Saklıdır.</p>
+        <p style="font-size: 12px; opacity: 0.8;">Mahmutbey, Bağcılar / İstanbul</p>
+    </footer>
+
+    <script>
+        const modelData = {
+            "Alfa Romeo": ["Giulietta", "Giulia", "Stelvio", "Tonale", "159"],
+            "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q5", "Q7", "Q8", "RS"],
+            "BMW": ["1 Serisi", "2 Serisi", "3 Serisi", "4 Serisi", "5 Serisi", "6 Serisi", "7 Serisi", "8 Serisi", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "M Serisi", "i Serisi"],
+            "Chery": ["Tiggo 7 Pro", "Tiggo 8 Pro", "Omoda 5"],
+            "Citroen": ["C3", "C3 Aircross", "C4", "C4 X", "C5", "C5 Aircross", "C-Elysee", "Berlingo", "Nemo"],
+            "Cupra": ["Formentor", "Leon", "Ateca"],
+            "Dacia": ["Sandero", "Stepway", "Duster", "Jogger", "Lodgy", "Dokker"],
+            "DS Automobiles": ["DS 4", "DS 7", "DS 9"],
+            "Fiat": ["Egea", "Egea Cross", "Linea", "Panda", "500", "500L", "Doblo", "Fiorino"],
+            "Ford": ["Fiesta", "Focus", "Mondeo", "Puma", "Kuga", "Ranger", "Tourneo Courier", "Tourneo Connect", "Transit"],
+            "Honda": ["Civic", "City", "Accord", "CR-V", "HR-V"],
+            "Hyundai": ["i10", "i20", "i30", "Accent Blue", "Elantra", "Bayon", "Kona", "Tucson", "Santa Fe"],
+            "Jeep": ["Renegade", "Compass", "Wrangler"],
+            "Kia": ["Picanto", "Rio", "Stonic", "Ceed", "XCeed", "Sportage", "Sorento", "Bongo"],
+            "Land Rover": ["Range Rover", "Range Rover Sport", "Evoque", "Discovery", "Defender"],
+            "Maserati": ["Ghibli", "Levante", "Quattroporte"],
+            "Mazda": ["Mazda 3", "Mazda 6", "CX-3", "CX-5"],
+            "Mercedes-Benz": ["A Serisi", "B Serisi", "C Serisi", "E Serisi", "S Serisi", "CLA", "GLA", "GLC", "GLE", "G Serisi", "Vito"],
+            "MG": ["ZS", "HS", "MG4"],
+            "Mini": ["Cooper", "Countryman"],
+            "Mitsubishi": ["Space Star", "L200", "ASX"],
+            "Nissan": ["Micra", "Juke", "Qashqai", "X-Trail", "Navara"],
+            "Opel": ["Corsa", "Astra", "Insignia", "Mokka", "Crossland", "Grandland", "Combo"],
+            "Peugeot": ["Peugeot 208", "Peugeot 308", "Peugeot 408", "Peugeot 508", "Peugeot 2008", "Peugeot 3008", "Peugeot 5008", "Partner", "Rifter"],
+            "Porsche": ["911", "Taycan", "Panamera", "Macan", "Cayenne"],
+            "Renault": ["Clio", "Taliant", "Megane", "Austral", "Captur", "Fluence", "Symbol", "Kangoo"],
+            "Seat": ["Ibiza", "Leon", "Arona", "Ateca", "Tarraco"],
+            "Skoda": ["Fabia", "Scala", "Octavia", "Superb", "Kamiq", "Karoq", "Kodiaq"],
+            "Suzuki": ["Swift", "Vitara", "Jimny"],
+            "Tesla": ["Model 3", "Model Y"],
+            "Toyota": ["Yaris", "Corolla", "C-HR", "Rav4", "Hilux", "Proace City"],
+            "Togg": ["T10X"],
+            "Volkswagen": ["Polo", "Golf", "T-Roc", "Tiguan", "Passat", "Arteon", "Caddy", "Transporter", "Amarok"],
+            "Volvo": ["S60", "S90", "XC40", "XC60", "XC90"]
+        };
+
+        window.onload = function() {
+            const markaSelect = document.getElementById("markaSec");
+            const markalar = Object.keys(modelData).sort();
+            markalar.forEach(marka => {
+                const option = document.createElement("option");
+                option.value = marka;
+                option.text = marka;
+                markaSelect.add(option);
+            });
+        };
+
+        function modelleriGuncelle() {
+            const marka = document.getElementById("markaSec").value;
+            const modelSelect = document.getElementById("modelSec");
+            modelSelect.innerHTML = '<option value="">Model Seç</option>';
+            if(marka && modelData[marka]) {
+                modelData[marka].sort().forEach(model => {
+                    const option = document.createElement("option");
+                    option.value = model;
+                    option.text = model;
+                    modelSelect.add(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

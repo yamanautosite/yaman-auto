@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaman Auto | Admin Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-container { padding: 30px; max-width: 1200px; margin: 0 auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .admin-table th, .admin-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .admin-table th { background: var(--yaman-blue); color: white; }
+        .car-img-sm { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; }
+        .btn-add { background: #2ecc71; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .btn-delete { color: #e74c3c; cursor: pointer; border: none; background: none; font-size: 18px; }
+        .btn-delete:hover { color: #c0392b; }
+    </style>
+</head>
+<body style="background: #f8f9fa;">
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2><i class="fas fa-tools"></i> İlan Yönetim Paneli</h2>
+            <div>
+                <a href="/" class="btn-go-detail" style="background: #666; margin-right: 10px;">Siteye Git</a>
+                <a href="/admin/ekle" class="btn-add"><i class="fas fa-plus"></i> Yeni İlan Ekle</a>
+            </div>
+        </div>
+
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Görsel</th>
+                    <th>Araç Bilgisi</th>
+                    <th>Fiyat</th>
+                    <th>KM / Yakıt</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(araclar.length > 0) { %>
+                    <% araclar.forEach(arac => { %>
+                        <tr>
+                            <td><img src="<%= arac.resim %>" class="car-img-sm"></td>
+                            <td><strong><%= arac.yil %> <%= arac.marka %> <%= arac.model %></strong></td>
+                            <td><span style="color: #2ecc71; font-weight: bold;"><%= arac.fiyat %></span></td>
+                            <td style="font-size: 13px; color: #666;"><%= arac.km %> KM | <%= arac.yakit %></td>
+                            <td>
+                                <a href="/admin/sil/<%= arac.id %>" onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?')" class="btn-delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 50px; color: #999;">Henüz hiç ilan eklenmemiş.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

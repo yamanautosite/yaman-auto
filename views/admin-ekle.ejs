@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni İlan Ekle | Yaman Auto Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-form-container { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .btn-submit { width: 100%; background: #2ecc71; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { background: #27ae60; }
+    </style>
+</head>
+<body style="background: #f4f7f6;">
+
+    <div class="admin-form-container">
+        <h2 style="text-align: center; color: var(--yaman-blue); margin-bottom: 25px;">
+            <i class="fas fa-plus-circle"></i> Yeni Araç İlanı Ekle
+        </h2>
+        
+        <form action="/admin/ekle" method="POST">
+            <div class="form-group">
+                <label>Marka</label>
+                <input type="text" name="marka" placeholder="Örn: Fiat" required>
+            </div>
+            <div class="form-group">
+                <label>Model</label>
+                <input type="text" name="model" placeholder="Örn: Punto" required>
+            </div>
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label>Yıl</label>
+                    <input type="number" name="yil" placeholder="2015" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Fiyat (TL)</label>
+                    <input type="text" name="fiyat" placeholder="450.000 TL" required>
+                </div>
+            </div>
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label>Kilometre</label>
+                    <input type="text" name="km" placeholder="120.000" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Yakıt Türü</label>
+                    <select name="yakit">
+                        <option value="Benzin">Benzin</option>
+                        <option value="Dizel">Dizel</option>
+                        <option value="LPG">LPG</option>
+                        <option value="Elektrik">Elektrik</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Resim URL (Şimdilik Link)</label>
+                <input type="text" name="resim" placeholder="https://..." required>
+            </div>
+            
+            <button type="submit" class="btn-submit">İLANINI YAYINLA</button>
+            <a href="/admin/panel" style="display:block; text-align:center; margin-top:15px; color:#666; text-decoration:none; font-size:13px;">Panele Geri Dön</a>
+        </form>
+    </div>
+
+</body>
+</html>
