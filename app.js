@@ -12,19 +12,24 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 // --- CLOUDINARY YAPILANDIRMASI ---
 cloudinary.config({
-  cloud_name: 'djcmmlnz4', 
-  api_key: '898543896878648',
-  api_secret: 'A3aMt2AQYyOhn7dyO3ZHSHmiV-M' 
+    cloud_name: 'djcmmlnz4', 
+    api_key: '898543896878648',
+    api_secret: 'A3aMt2AQYyOhn7dyO3ZHSHmiV-M' 
 });
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'yaman-auto',
-    allowed_formats: ['jpg', 'png', 'jpeg'],
-  },
+    cloudinary: cloudinary,
+    params: {
+        folder: 'yaman-auto',
+        allowed_formats: ['jpg', 'png', 'jpeg'],
+    },
 });
-const upload = multer({ storage: storage }).array('resimler', 15);
+
+// Hata ayıklama için multer'ı bir değişken olarak tanımlıyoruz
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // Dosya başı 5MB sınırı
+}).array('resimler', 15);
 
 // --- ARAÇ MODELİ (Mühürlü Şema) ---
 const aracSchema = new mongoose.Schema({
@@ -34,7 +39,7 @@ const aracSchema = new mongoose.Schema({
     km: String,
     yil: String,
     yakit: String,
-    resimler: [String], // Çoklu fotoğraf listesi
+    resimler: [String], // URL listesi
     eklenmeTarihi: { type: Date, default: Date.now }
 });
 const Arac = mongoose.model('Arac', aracSchema);
@@ -42,12 +47,13 @@ const Arac = mongoose.model('Arac', aracSchema);
 // --- GENEL AYARLAR ---
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, "public"))); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: 'yaman_auto_ozel_anahtar',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Bellek uyarısını önlemek için false
     cookie: { maxAge: 3600000 }
 }));
 
@@ -61,6 +67,7 @@ const adminKontrol = (req, res, next) => {
 };
 
 // --- MONGODB BAĞLANTISI ---
+// process.env.MONGODB_URI'nin Render üzerinde tanımlı olduğundan emin ol!
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('🚀 Yaman Auto Kasası Güvenle Bağlandı!'))
     .catch((err) => console.log('❌ Kasa Bağlantı Hatası:', err.message));
@@ -123,20 +130,26 @@ app.get('/admin/panel', adminKontrol, async (req, res) => {
 
 app.get('/admin/ekle', adminKontrol, (req, res) => res.render('admin-ekle'));
 
-// --- İLAN KAYDETME (KRİTİK GÜNCELLEME) ---
-app.post('/admin/ekle', adminKontrol, upload, async (req, res) => {
-    try {
-        const yeniVeri = { ...req.body };
-        if (req.files && req.files.length > 0) {
-            yeniVeri.resimler = req.files.map(file => file.path);
+// --- İLAN KAYDETME (TAMİR EDİLDİ) ---
+app.post('/admin/ekle', adminKontrol, (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error("YÜKLEME HATASI:", err);
+            return res.status(500).send("Fotoğraflar yüklenemedi: " + err.message);
         }
-        const yeniArac = new Arac(yeniVeri);
-        await yeniArac.save();
-        res.redirect('/admin/panel');
-    } catch (err) {
-        console.error("MÜHÜRLEME HATASI:", err); // Hatanın nedenini terminale basar
-        res.status(500).send("Kayıt sırasında hata oluştu: " + err.message);
-    }
+        try {
+            const yeniVeri = { ...req.body };
+            if (req.files) {
+                yeniVeri.resimler = req.files.map(file => file.path);
+            }
+            const yeniArac = new Arac(yeniVeri);
+            await yeniArac.save();
+            res.redirect('/admin/panel');
+        } catch (dbErr) {
+            console.error("VERİTABANI HATASI:", dbErr);
+            res.status(500).send("İlan kaydedilemedi: " + dbErr.message);
+        }
+    });
 });
 
 app.get('/admin/duzenle/:id', adminKontrol, async (req, res) => {
@@ -146,15 +159,19 @@ app.get('/admin/duzenle/:id', adminKontrol, async (req, res) => {
     } catch (err) { res.redirect('/admin/panel'); }
 });
 
-app.post('/admin/guncelle/:id', adminKontrol, upload, async (req, res) => {
-    try {
-        let guncelVeri = { ...req.body };
-        if (req.files && req.files.length > 0) {
-            guncelVeri.resimler = req.files.map(file => file.path);
-        }
-        await Arac.findByIdAndUpdate(req.params.id, guncelVeri);
-        res.redirect('/admin/panel');
-    } catch (err) { res.status(500).send("Güncelleme hatası."); }
+// --- İLAN GÜNCELLEME (TAMİR EDİLDİ) ---
+app.post('/admin/guncelle/:id', adminKontrol, (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) return res.status(500).send("Güncelleme sırasında yükleme hatası.");
+        try {
+            let guncelVeri = { ...req.body };
+            if (req.files && req.files.length > 0) {
+                guncelVeri.resimler = req.files.map(file => file.path);
+            }
+            await Arac.findByIdAndUpdate(req.params.id, guncelVeri);
+            res.redirect('/admin/panel');
+        } catch (dbErr) { res.status(500).send("Veritabanı güncelleme hatası."); }
+    });
 });
 
 app.get('/admin/sil/:id', adminKontrol, async (req, res) => {
