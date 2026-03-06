@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaman Auto | Admin Girişi</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .login-body { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 400px; text-align: center; }
+        .login-logo { font-size: 28px; font-weight: bold; color: #1e3c72; margin-bottom: 25px; display: block; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s; }
+        .form-group input:focus { border-color: #1e3c72; box-shadow: 0 0 5px rgba(30,60,114,0.2); }
+        .btn-login { width: 100%; padding: 12px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-login:hover { background: #2a5298; transform: translateY(-2px); }
+    </style>
+</head>
+<body class="login-body">
+
+    <div class="login-card">
+        <div class="login-logo">
+            <i class="fas fa-user-shield"></i> YAMAN AUTO
+        </div>
+        <p style="color: #666; margin-bottom: 30px;">Yönetim Paneline Giriş Yap</p>
+        
+        <form action="/admin/login" method="POST">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Kullanıcı Adı</label>
+                <input type="text" name="username" placeholder="Kullanıcı adınız..." required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Şifre</label>
+                <input type="password" name="password" placeholder="Şifreniz..." required>
+            </div>
+            <button type="submit" class="btn-login">GİRİŞ YAP</button>
+        </form>
+        
+        <a href="/" style="display: block; margin-top: 20px; color: #888; text-decoration: none; font-size: 13px;">
+            <i class="fas fa-arrow-left"></i> Siteye Geri Dön
+        </a>
+    </div>
+
+</body>
+</html>

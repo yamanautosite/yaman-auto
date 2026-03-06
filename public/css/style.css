@@ -1,0 +1,317 @@
+/* --- Yaman Auto Stil Dosyası --- */
+:root {
+    --yaman-blue: #003399;
+    --yaman-light-blue: #0055ff;
+    --yaman-white: #ffffff;
+    --bg-gray: #f4f7f6;
+    --text-dark: #333;
+    --whatsapp-green: #25d366;
+}
+
+/* Sayfa geçişlerini mühür gibi yumuşatır */
+html { scroll-behavior: smooth; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: var(--bg-gray); 
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* --- HEADER & NAV --- */
+.main-header {
+    background-color: var(--yaman-blue);
+    color: white;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.header-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.logo { display: flex; align-items: center; font-size: 22px; font-weight: bold; cursor: pointer; }
+.yaman-final-logo { height: 50px !important; width: 50px !important; margin-right: 12px; border-radius: 50%; border: 1.5px solid white; padding: 2px; background: white; object-fit: contain; }
+nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: 500; transition: 0.3s; }
+nav a:hover { opacity: 0.8; }
+.whatsapp-nav { background: var(--whatsapp-green); color: white; padding: 5px 12px; border-radius: 50px; text-decoration: none; font-size: 1.2rem; }
+
+/* --- HERO SECTION --- */
+.hero {
+    background: linear-gradient(135deg, var(--yaman-blue), var(--yaman-light-blue));
+    color: white;
+    padding: 20px 0;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+}
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
+.hero-text h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; }
+
+/* BUTONLARIN YAN YANA DURMASI İÇİN */
+.hero-actions {
+    display: flex;
+    gap: 15px; 
+    margin-top: 20px;
+}
+
+.btn-hero { 
+    display: inline-flex; 
+    align-items: center;
+    gap: 8px;
+    padding: 10px 25px; 
+    border: 2px solid white; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 5px; 
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-call-yaman {
+    background-color: white;
+    color: var(--yaman-blue) !important;
+}
+
+.btn-call-yaman:hover {
+    background-color: transparent;
+    color: white !important;
+}
+
+.hero-image img { 
+    width: 284px;
+    height: 300px; 
+    object-fit: cover;
+    object-position: top;
+    border-radius: 20px;
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,0.4));
+    border: 3px solid rgba(255,255,255,0.1);
+}
+
+/* --- ANA SAYFA YERLEŞİM (LAYOUT) --- */
+.main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+.filter-sidebar {
+    background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content;
+}
+.filter-sidebar select, .filter-sidebar input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; }
+.btn-filter { width: 100%; background: var(--yaman-blue); color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+
+/* ARAÇ KARTLARI */
+.vehicle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.vehicle-card { background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer; transition: 0.3s; }
+.vehicle-card:hover { transform: translateY(-5px); }
+.card-img-box { height: 180px; overflow: hidden; }
+.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.card-body-content { padding: 15px; }
+.card-price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding: 15px; }
+.price-val { font-size: 18px; color: var(--yaman-blue); font-weight: bold; }
+.btn-go-detail { background-color: var(--yaman-blue); color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 600; }
+
+/* --- DETAY SAYFASI VE MODERN GERİ BUTONU --- */
+.detail-layout { max-width: 1200px; margin: 40px auto; padding: 0 20px; position: relative; }
+.detail-container { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 40px; 
+    background: white; 
+    padding: 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    align-items: start;
+    position: relative; 
+}
+
+.btn-all-cars {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+.btn-all-cars:hover { background: var(--yaman-blue); color: white; transform: translateX(-5px); }
+
+.main-detail-img { width: 100%; border-radius: 10px; object-fit: cover; }
+.detail-price { font-size: 32px; color: var(--yaman-blue); font-weight: bold; margin: 20px 0; }
+
+.specs-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+.specs-table tr { border-bottom: 1px solid #eee; }
+.specs-table td { padding: 12px 0; color: #555; }
+.specs-table td:first-child { font-weight: bold; color: var(--yaman-blue); width: 40%; }
+.specs-table td i { margin-right: 10px; width: 20px; text-align: center; }
+
+.detail-actions { display: flex; gap: 15px; margin-top: 30px; }
+.btn-call, .btn-whatsapp { flex: 1; padding: 15px; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; color: white; transition: 0.3s; }
+.btn-call { background: var(--yaman-blue); }
+.btn-whatsapp { background: var(--whatsapp-green); }
+
+/* --- İLETİŞİM SAYFASI TAMİRİ --- */
+.contact-section { padding: 40px 0; }
+.section-title-center { 
+    text-align: center !important; 
+    width: 100%; 
+    display: block; 
+    margin-bottom: 40px; 
+    color: var(--yaman-blue); 
+    font-size: 32px; 
+    font-weight: 800;
+}
+.contact-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1.5fr; 
+    gap: 40px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 0 20px;
+    align-items: start;
+}
+.contact-info-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+.info-item { display: flex; gap: 20px; margin-bottom: 25px; align-items: flex-start; }
+.info-item i { font-size: 24px; color: var(--yaman-blue); margin-top: 5px; width: 30px; text-align: center; }
+.contact-map { width: 100%; height: 450px; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+
+/* --- FOOTER --- */
+.main-footer { background: var(--yaman-blue); color: white; text-align: center; padding: 30px; margin-top: 50px; }
+a[href*="elfsight.com"] { display: none !important; }
+
+/* --- MOBİL UYUMLULUK --- */
+@media (max-width: 768px) {
+    .main-layout, .contact-grid, .detail-container { grid-template-columns: 1fr; }
+    .hero-container { flex-direction: column; text-align: center; }
+    .hero-image img { width: 260px; height: 280px; margin-top: 20px; }
+    .contact-map { height: 300px; }
+    .section-title-center { font-size: 26px; }
+    .btn-all-cars { top: 10px; left: 10px; padding: 8px 15px; font-size: 12px; }
+}
+
+/* --- HERO SLIDER (YÜKSEKLİK MÜHÜRLENDİ) --- */
+.hero-slider-wrapper {
+    position: relative;
+    width: 300px; 
+    height: 300px; 
+    border-radius: 30px;
+    overflow: hidden;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
+    border: 4px solid rgba(255,255,255,0.1);
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 1;
+}
+
+.hero-slide.active { opacity: 1; z-index: 2; }
+
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 8px;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    border-radius: 5px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: 0.3s;
+}
+.slider-arrow:hover { background: rgba(255, 255, 255, 0.3); }
+.prev-arrow { left: 10px; }
+.next-arrow { right: 10px; }
+
+/* --- ARAÇ DETAY GALERİSİ (BOYUT KORUNDU) --- */
+.detail-gallery-wrapper {
+    position: relative;
+    width: 100%; 
+    height: 100%; /* detey.ejs içindeki img boyutuna sadık kalır */
+    min-height: 400px; /* Mevcut tasarımını koruması için */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.detail-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    z-index: 1;
+}
+
+.detail-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Detay Sayfası Cam Oklar */
+.gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 8px;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 10;
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.gallery-arrow:hover { background: rgba(255, 255, 255, 0.3); }
+.prev-gallery { left: 15px; }
+.next-gallery { right: 15px; }

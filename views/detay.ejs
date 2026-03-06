@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= arac.yil %> <%= arac.marka %> <%= arac.model %> | Yaman Auto</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='/'" style="cursor: pointer;">
+                <img src="/images/logo.png" alt="Yaman Auto Logo" class="yaman-final-logo">
+                YAMAN AUTO
+            </div>
+            <nav>
+                <a href="/">Ana Sayfa</a>
+                <a href="/satilik-araclar">Satılık Araçlar</a>
+                <a href="/hakkimizda">Hakkımızda</a>
+                <a href="/iletisim">İletişim</a>
+            </nav>
+            <div class="header-right">
+                <span class="phone-text"><i class="fas fa-phone"></i> 0532 236 55 37</span>
+                <a href="https://wa.me/905322365537" class="whatsapp-nav" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container detail-layout">
+        <div class="detail-container">
+            <div class="detail-gallery-wrapper">
+                <a href="/" id="backButton" class="btn-all-cars">
+                    <i class="fas fa-arrow-left"></i> Tüm Araçlar
+                </a>
+                
+                <div class="detail-gallery">
+                    <img src="<%= arac.resim %>" alt="<%= arac.marka %> <%= arac.model %>" class="detail-slide active">
+                    <img src="<%= arac.resim %>" alt="Görsel 2" class="detail-slide">
+                    <img src="<%= arac.resim %>" alt="Görsel 3" class="detail-slide">
+                </div>
+
+                <button class="gallery-arrow prev-gallery" onclick="changeDetailSlide(-1)">❮</button>
+                <button class="gallery-arrow next-gallery" onclick="changeDetailSlide(1)">❯</button>
+            </div>
+
+            <div class="detail-info">
+                <h1><%= arac.yil %> <%= arac.marka %> <%= arac.model %></h1>
+                <div class="detail-price"><%= arac.fiyat %></div>
+                
+                <table class="specs-table">
+                    <tr><td><i class="fas fa-tachometer-alt"></i> Kilometre</td><td><%= arac.km %> KM</td></tr>
+                    <tr><td><i class="fas fa-gas-pump"></i> Yakıt Türü</td><td><%= arac.yakit %></td></tr>
+                    <tr><td><i class="fas fa-cogs"></i> Vites</td><td>Otomatik</td></tr>
+                    <tr><td><i class="fas fa-palette"></i> Renk</td><td>Beyaz</td></tr>
+                </table>
+
+                <div class="detail-actions">
+                    <a href="tel:+905322365537" class="btn-call"><i class="fas fa-phone"></i> Hemen Ara</a>
+                    
+                    <% 
+                        let mesaj = `Merhaba Yaman Auto, sitenizdeki ${arac.yil} model ${arac.marka} ${arac.model} (${arac.fiyat}) aracınız hakkında bilgi almak istiyorum.`;
+                        let encodedMesaj = encodeURIComponent(mesaj);
+                        
+                        let paylasMesaj = `Yaman Auto'da harika bir araç buldum, incelemek ister misin? \n${arac.yil} ${arac.marka} ${arac.model}\n`;
+                        let encodedPaylas = encodeURIComponent(paylasMesaj);
+                    %>
+                    <a href="https://wa.me/905322365537?text=<%= encodedMesaj %>" class="btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> WhatsApp'tan Sor
+                    </a>
+                </div>
+
+                <div class="extra-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                    <a href="https://api.whatsapp.com/send?text=<%= encodedPaylas %> http://localhost:3000/arac/<%= arac.id %>" 
+                       target="_blank" 
+                       style="display: block; text-align: center; color: #555; text-decoration: none; font-size: 14px; border: 1px solid #ddd; padding: 12px; border-radius: 8px; transition: 0.3s;"
+                       onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                        <i class="fas fa-share-alt"></i> Bu Aracı Arkadaşınla Paylaş
+                    </a>
+
+                    <a href="https://www.google.com/maps/search/?api=1&query=YAMAN+AUTO+GROUP+Bağcılar+İstanbul&query_place_id=ChIJIZ--rW2xyhQR5EQTrzMujSE" 
+                       target="_blank" 
+                       style="display: block; text-align: center; background: #f8f9fa; color: #333; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #eee; transition: 0.3s;"
+                       onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        <i class="fas fa-map-marker-alt" style="color: #d9534f;"></i> Mağaza Konumunu Al
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>© 2026 <strong>Yaman Auto</strong> - Tüm Hakları Saklıdır.</p>
+        <p style="font-size: 12px; opacity: 0.8;">Mahmutbey, Bağcılar / İstanbul</p>
+    </footer>
+
+    <script>
+        // YÖNLENDİRME KONTROLÜ
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromSource = urlParams.get('from');
+            const backBtn = document.getElementById('backButton');
+
+            if (fromSource === 'inventory') {
+                // Galeriden gelindiyse Satılık Araçlar'a döndürür
+                backBtn.href = "/satilik-araclar";
+            } else {
+                // Ana sayfadan gelindiyse #araclar bölümüne döndürür
+                backBtn.href = "/#araclar";
+            }
+        });
+
+        // SLIDER FONKSİYONLARI
+        let currentDetailSlide = 0;
+        const detailSlides = document.querySelectorAll('.detail-slide');
+        const totalDetailSlides = detailSlides.length;
+
+        function changeDetailSlide(direction) {
+            detailSlides[currentDetailSlide].classList.remove('active');
+            currentDetailSlide = (currentDetailSlide + direction + totalDetailSlides) % totalDetailSlides;
+            detailSlides[currentDetailSlide].classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

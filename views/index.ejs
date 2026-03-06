@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaman Auto | Ailenizin Galericisi Yaman Auto</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='/'" style="cursor: pointer;">
+                <img src="/images/logo.png" alt="Yaman Auto Logo" class="yaman-final-logo">
+                YAMAN AUTO
+            </div>
+            <nav>
+                <a href="/">Ana Sayfa</a>
+                <a href="/satilik-araclar">Satılık Araçlar</a>
+                <a href="/hakkimizda">Hakkımızda</a>
+                <a href="/iletisim">İletişim</a>
+            </nav>
+            <div class="header-right">
+                <span class="phone-text"><i class="fas fa-phone"></i> 0532 236 55 37</span>
+                <a href="https://wa.me/905322365537" class="whatsapp-nav" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Ailenizin Galericisi Yaman Auto</h1>
+                <p>Şeffaf Ekspertiz • Uygun Fiyat • Hızlı İşlem</p>
+                <div class="hero-actions">
+                    <a href="/#araclar" class="btn-hero">Tüm Araçları İncele</a>
+                    <a href="tel:05322365537" class="btn-hero btn-call-yaman">
+                        <i class="fas fa-phone-alt"></i> Alo Yaman Auto
+                    </a>
+                </div>
+            </div>
+            <div class="hero-slider-wrapper">
+                <div class="hero-slider">
+                    <img src="/images/mustafa.jpg" alt="Mustafa Yaman" class="hero-slide active">
+                    <img src="/images/2..jpg" alt="Yaman Auto Vitrin" class="hero-slide">
+                    <img src="/images/3..jpg" alt="Yaman Auto Araçlar" class="hero-slide">
+                    <img src="/images/4..jpg" alt="Yaman Auto Güvencesi" class="hero-slide">
+                </div>
+                <button class="slider-arrow prev-arrow" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="slider-arrow next-arrow" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-layout" id="araclar">
+        
+        <aside class="filter-sidebar">
+            <div class="filter-title">
+                <h3>Filtrele</h3>
+            </div>
+            <form action="/#araclar" method="GET" id="filterForm">
+                <select name="marka" id="markaSec" onchange="modelleriGuncelle()">
+                    <option value="">Marka Seç</option>
+                </select>
+                
+                <select name="model" id="modelSec">
+                    <option value="">Model Seç</option>
+                </select>
+
+                <div class="range-group">
+                    <input type="number" name="minFiyat" placeholder="Min Fiyat">
+                    <input type="number" name="maxFiyat" placeholder="Max Fiyat">
+                </div>
+
+                <div class="range-group">
+                    <input type="number" name="minKM" placeholder="Min KM">
+                    <input type="number" name="maxKM" placeholder="Max KM">
+                </div>
+
+                <select name="yakit">
+                    <option value="">Yakıt Türü</option>
+                    <option value="Benzin">Benzin</option>
+                    <option value="Dizel">Dizel</option>
+                    <option value="LPG">LPG</option>
+                    <option value="Hibrit">Hibrit</option>
+                    <option value="Elektrik">Elektrik</option>
+                </select>
+
+                <button type="submit" class="btn-filter">ARA</button>
+                <a href="/#araclar" style="display:block; text-align:center; margin-top:10px; font-size:12px; color:#666; text-decoration:none;">Filtreleri Temizle</a>
+            </form>
+            
+            <div class="total-count">
+                Toplam <strong><%= araclar.length %></strong> Araç Listeleniyor
+            </div>
+        </aside>
+
+        <section class="content-area">
+            <div class="section-header">
+                <h2>Tüm Araçlarımız</h2>
+            </div>
+
+            <div class="vehicle-grid">
+                <% if(araclar.length > 0) { %>
+                    <% araclar.forEach(arac => { %>
+                        <div class="vehicle-card" onclick="location.href='/arac/<%= arac.id %>'" style="cursor: pointer;">
+                            <div class="card-img-box">
+                                <img src="<%= arac.resim %>" alt="<%= arac.marka %>">
+                            </div>
+                            <div class="card-body-content">
+                                <h3><%= arac.yil %> <%= arac.marka %> <%= arac.model %></h3>
+                                <p class="specs-info"><%= arac.km %> KM | <%= arac.yakit %></p>
+                                <div class="card-price-row">
+                                    <span class="price-val"><%= arac.fiyat %></span>
+                                    <a href="/arac/<%= arac.id %>" class="btn-go-detail" onclick="event.stopPropagation();">Detayları Gör</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; background: white; border-radius: 10px;">
+                        <i class="fas fa-search" style="font-size: 40px; color: #ccc; margin-bottom: 20px;"></i>
+                        <p>Aradığınız kriterlere uygun araç bulunamadı.</p>
+                        <a href="/#araclar" style="color: var(--yaman-blue); text-decoration: underline;">Tüm araçları göster</a>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+    <section class="insta-live-vitrin">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+            <div class="section-title-center" style="text-align: center; margin-bottom: 30px;">
+                <i class="fab fa-instagram" style="font-size: 45px; color: #E1306C;"></i>
+                <h2 style="color: var(--yaman-blue); margin-top: 10px;">Vitrinden Canlı Görüntüler</h2>
+                <p style="color: #666;">@yaman.auto.group • Anlık Güncellenir</p>
+            </div>
+
+            <div class="elfsight-container" style="border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-af0db964-de41-4756-bbfb-e945b90f91ef" data-elfsight-app-lazy></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://www.instagram.com/yaman.auto.group/" target="_blank" class="btn-insta-follow">
+                    Bizi Instagram'da Takip Edin
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <p>© 2026 <strong>Yaman Auto</strong> - Tüm Hakları Saklıdır.</p>
+        <p style="font-size: 12px; opacity: 0.8;">Mahmutbey, Bağcılar / İstanbul</p>
+    </footer>
+
+    <script>
+        const modelData = {
+            "Alfa Romeo": ["Giulietta", "Giulia", "Stelvio", "Tonale", "159"],
+            "Audi": ["A1", "A3", "A4", "A5", "A6", "A7", "A8", "Q2", "Q3", "Q5", "Q7", "Q8", "RS"],
+            "BMW": ["1 Serisi", "2 Serisi", "3 Serisi", "4 Serisi", "5 Serisi", "6 Serisi", "7 Serisi", "8 Serisi", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "M Serisi", "i Serisi"],
+            "Chery": ["Tiggo 7 Pro", "Tiggo 8 Pro", "Omoda 5"],
+            "Citroen": ["C3", "C3 Aircross", "C4", "C4 X", "C5", "C5 Aircross", "C-Elysee", "Berlingo", "Nemo"],
+            "Cupra": ["Formentor", "Leon", "Ateca"],
+            "Dacia": ["Sandero", "Stepway", "Duster", "Jogger", "Lodgy", "Dokker"],
+            "DS Automobiles": ["DS 4", "DS 7", "DS 9"],
+            "Fiat": ["Egea", "Egea Cross", "Linea", "Panda", "500", "500L", "Doblo", "Fiorino"],
+            "Ford": ["Fiesta", "Focus", "Mondeo", "Puma", "Kuga", "Ranger", "Tourneo Courier", "Tourneo Connect", "Transit"],
+            "Honda": ["Civic", "City", "Accord", "CR-V", "HR-V"],
+            "Hyundai": ["i10", "i20", "i30", "Accent Blue", "Elantra", "Bayon", "Kona", "Tucson", "Santa Fe"],
+            "Jeep": ["Renegade", "Compass", "Wrangler"],
+            "Kia": ["Picanto", "Rio", "Stonic", "Ceed", "XCeed", "Sportage", "Sorento", "Bongo"],
+            "Land Rover": ["Range Rover", "Range Rover Sport", "Evoque", "Discovery", "Defender"],
+            "Maserati": ["Ghibli", "Levante", "Quattroporte"],
+            "Mazda": ["Mazda 3", "Mazda 6", "CX-3", "CX-5"],
+            "Mercedes-Benz": ["A Serisi", "B Serisi", "C Serisi", "E Serisi", "S Serisi", "CLA", "GLA", "GLC", "GLE", "G Serisi", "Vito"],
+            "MG": ["ZS", "HS", "MG4"],
+            "Mini": ["Cooper", "Countryman"],
+            "Mitsubishi": ["Space Star", "L200", "ASX"],
+            "Nissan": ["Micra", "Juke", "Qashqai", "X-Trail", "Navara"],
+            "Opel": ["Corsa", "Astra", "Insignia", "Mokka", "Crossland", "Grandland", "Combo"],
+            "Peugeot": ["Peugeot 208", "Peugeot 308", "Peugeot 408", "Peugeot 508", "Peugeot 2008", "Peugeot 3008", "Peugeot 5008", "Partner", "Rifter"],
+            "Porsche": ["911", "Taycan", "Panamera", "Macan", "Cayenne"],
+            "Renault": ["Clio", "Taliant", "Megane", "Austral", "Captur", "Fluence", "Symbol", "Kangoo"],
+            "Seat": ["Ibiza", "Leon", "Arona", "Ateca", "Tarraco"],
+            "Skoda": ["Fabia", "Scala", "Octavia", "Superb", "Kamiq", "Karoq", "Kodiaq"],
+            "Suzuki": ["Swift", "Vitara", "Jimny"],
+            "Tesla": ["Model 3", "Model Y"],
+            "Toyota": ["Yaris", "Corolla", "C-HR", "Rav4", "Hilux", "Proace City"],
+            "Togg": ["T10X"],
+            "Volkswagen": ["Polo", "Golf", "T-Roc", "Tiguan", "Passat", "Arteon", "Caddy", "Transporter", "Amarok"],
+            "Volvo": ["S60", "S90", "XC40", "XC60", "XC90"]
+        };
+
+        window.onload = function() {
+            const markaSelect = document.getElementById("markaSec");
+            const markalar = Object.keys(modelData).sort();
+            markalar.forEach(marka => {
+                const option = document.createElement("option");
+                option.value = marka;
+                option.text = marka;
+                markaSelect.add(option);
+            });
+        };
+
+        function modelleriGuncelle() {
+            const marka = document.getElementById("markaSec").value;
+            const modelSelect = document.getElementById("modelSec");
+            modelSelect.innerHTML = '<option value="">Model Seç</option>';
+            if(marka && modelData[marka]) {
+                modelData[marka].sort().forEach(model => {
+                    const option = document.createElement("option");
+                    option.value = model;
+                    option.text = model;
+                    modelSelect.add(option);
+                });
+            }
+        }
+    </script>
+<script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const slideCount = slides.length;
+        let slideInterval;
+
+        function startSlider() {
+            slideInterval = setInterval(() => {
+                changeSlide(1);
+            }, 5000); // 5 saniyede bir döner
+        }
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + slideCount) % slideCount;
+            slides[currentSlide].classList.add('active');
+            
+            // Oklarla manuel geçiş yapılırsa süreyi sıfırla
+            if (event && event.type === 'click') {
+                clearInterval(slideInterval);
+                startSlider();
+            }
+        }
+        window.addEventListener('load', startSlider);
+    </script>
+</body>
+</html>
