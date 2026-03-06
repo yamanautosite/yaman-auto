@@ -65,7 +65,6 @@ nav a:hover { opacity: 0.8; }
 }
 .hero-text h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; }
 
-/* BUTONLARIN YAN YANA DURMASI İÇİN */
 .hero-actions {
     display: flex;
     gap: 15px; 
@@ -127,7 +126,27 @@ nav a:hover { opacity: 0.8; }
 .card-img-box { height: 180px; overflow: hidden; }
 .card-img-box img { width: 100%; height: 100%; object-fit: cover; }
 .card-body-content { padding: 15px; }
-.card-price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding: 15px; }
+
+/* YENİ: ARAÇ KARTLARINDAKİ İLETİŞİME GEÇ BUTONU */
+.btn-call-card {
+    display: block;
+    background-color: var(--whatsapp-green);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+.btn-call-card:hover {
+    background-color: #128c7e;
+    transform: translateY(-2px);
+}
+
+.card-price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 15px; margin-top: 10px; }
 .price-val { font-size: 18px; color: var(--yaman-blue); font-weight: bold; }
 .btn-go-detail { background-color: var(--yaman-blue); color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 600; }
 
@@ -159,7 +178,7 @@ nav a:hover { opacity: 0.8; }
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 10;
+    z-index: 100;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -168,7 +187,6 @@ nav a:hover { opacity: 0.8; }
 }
 .btn-all-cars:hover { background: var(--yaman-blue); color: white; transform: translateX(-5px); }
 
-.main-detail-img { width: 100%; border-radius: 10px; object-fit: cover; }
 .detail-price { font-size: 32px; color: var(--yaman-blue); font-weight: bold; margin: 20px 0; }
 
 .specs-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
@@ -182,7 +200,7 @@ nav a:hover { opacity: 0.8; }
 .btn-call { background: var(--yaman-blue); }
 .btn-whatsapp { background: var(--whatsapp-green); }
 
-/* --- İLETİŞİM SAYFASI TAMİRİ --- */
+/* --- İLETİŞİM SAYFASI --- */
 .contact-section { padding: 40px 0; }
 .section-title-center { 
     text-align: center !important; 
@@ -209,7 +227,6 @@ nav a:hover { opacity: 0.8; }
 
 /* --- FOOTER --- */
 .main-footer { background: var(--yaman-blue); color: white; text-align: center; padding: 30px; margin-top: 50px; }
-a[href*="elfsight.com"] { display: none !important; }
 
 /* --- MOBİL UYUMLULUK --- */
 @media (max-width: 768px) {
@@ -219,9 +236,10 @@ a[href*="elfsight.com"] { display: none !important; }
     .contact-map { height: 300px; }
     .section-title-center { font-size: 26px; }
     .btn-all-cars { top: 10px; left: 10px; padding: 8px 15px; font-size: 12px; }
+    .yaman-slider-container { max-width: 100%; height: 280px; }
 }
 
-/* --- HERO SLIDER (YÜKSEKLİK MÜHÜRLENDİ) --- */
+/* --- HERO SLIDER --- */
 .hero-slider-wrapper {
     position: relative;
     width: 300px; 
@@ -233,51 +251,34 @@ a[href*="elfsight.com"] { display: none !important; }
 }
 
 .hero-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    z-index: 1;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1;
 }
-
 .hero-slide.active { opacity: 1; z-index: 2; }
 
 .slider-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 12px 8px;
-    cursor: pointer;
-    font-size: 18px;
-    z-index: 10;
-    border-radius: 5px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: 0.3s;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 8px; cursor: pointer; font-size: 18px; z-index: 10; border-radius: 5px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;
 }
 .slider-arrow:hover { background: rgba(255, 255, 255, 0.3); }
 .prev-arrow { left: 10px; }
 .next-arrow { right: 10px; }
 
-/* --- ARAÇ DETAY GALERİSİ (BOYUT KORUNDU) --- */
-.detail-gallery-wrapper {
+/* --- YENİ: ARAÇ DETAY SLIDER (CERRAHİ GÜNCELLEME) --- */
+.yaman-slider-container {
     position: relative;
-    width: 100%; 
-    height: 100%; /* detey.ejs içindeki img boyutuna sadık kalır */
-    min-height: 400px; /* Mevcut tasarımını koruması için */
-    border-radius: 15px;
+    width: 100%;
+    max-width: 500px; /* İstediğin küçük boyut mühürlendi */
+    height: 350px;
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background-color: #eee;
 }
 
-.detail-slide {
+.yaman-slide {
     position: absolute;
     top: 0;
     left: 0;
@@ -285,33 +286,21 @@ a[href*="elfsight.com"] { display: none !important; }
     height: 100%;
     object-fit: cover;
     opacity: 0;
-    transition: opacity 0.8s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
     z-index: 1;
 }
 
-.detail-slide.active {
+.yaman-slide.active {
     opacity: 1;
     z-index: 2;
 }
 
-/* Detay Sayfası Cam Oklar */
-.gallery-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 12px 8px;
-    cursor: pointer;
-    font-size: 20px;
-    z-index: 10;
-    border-radius: 5px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: 0.3s;
+/* Detay Slider Okları */
+.yaman-slider-container .slider-arrow {
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    padding: 10px 15px;
 }
-
-.gallery-arrow:hover { background: rgba(255, 255, 255, 0.3); }
-.prev-gallery { left: 15px; }
-.next-gallery { right: 15px; }
+.yaman-slider-container .slider-arrow:hover {
+    background: rgba(0, 0, 0, 0.7);
+}

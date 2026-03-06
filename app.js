@@ -5,7 +5,28 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 
-// --- ARAÇ MODELİ (Sema Tanımı) ---
+// --- YENİ EKLENEN DOSYA YÜKLEME KÜTÜPHANELERİ ---
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// --- CLOUDINARY AYARLARI (Senin Bilgilerinle Mühürlendi) ---
+cloudinary.config({
+  cloud_name: 'djcmmlnz4', 
+  api_key: '898543896878648',
+  api_secret: 'BURAYA_GIZLI_SECRET_ANAHTARINI_YAZ' // <--- Mavi butondan aldığın secret'ı buraya yapıştır!
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'yaman-auto',
+    allowed_formats: ['jpg', 'png', 'jpeg'],
+  },
+});
+const upload = multer({ storage: storage }).array('resimler', 15);
+
+// --- ARAÇ MODELİ (15 Fotoğraf İçin Diziye Çevrildi) ---
 const aracSchema = new mongoose.Schema({
     marka: String,
     model: String,
@@ -13,7 +34,7 @@ const aracSchema = new mongoose.Schema({
     km: String,
     yil: String,
     yakit: String,
-    resim: String,
+    resimler: [String], // Sadece burası dizi (array) olarak güncellendi
     eklenmeTarihi: { type: Date, default: Date.now }
 });
 const Arac = mongoose.model('Arac', aracSchema);
@@ -25,19 +46,18 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- 1. OTURUM GÜVENLİĞİ (SESSION) ---
 app.use(session({
-    secret: 'yaman_auto_ozel_anahtar', // Oturumu şifrelemek için rastgele bir anahtar
+    secret: 'yaman_auto_ozel_anahtar',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 3600000 } // 1 saat sonra otomatik çıkış yapar
+    cookie: { maxAge: 3600000 }
 }));
 
 // --- 2. KORUMA KALKANI (MIDDLEWARE) ---
-// Bu fonksiyon, giriş yapmamış kişileri admin sayfalarından uzak tutar
 const adminKontrol = (req, res, next) => {
     if (req.session.adminGiris) {
-        next(); // Giriş yapılmışsa devam et
+        next();
     } else {
-        res.redirect('/admin/login'); // Yapılmamışsa giriş sayfasına at
+        res.redirect('/admin/login');
     }
 };
 
@@ -69,7 +89,7 @@ app.get('/', async (req, res) => {
         const araclar = await filtreleVeGetir(req.query);
         res.render('index', { araclar: araclar });
     } catch (err) {
-        res.status(500).send("Sistem şu an meşgul, lütfen az sonra tekrar deneyin.");
+        res.status(500).send("Sistem şu an meşgul.");
     }
 });
 
@@ -97,21 +117,18 @@ app.get('/iletisim', (req, res) => res.render('iletisim'));
 
 // --- 6. ADMİN ROTALARI (KORUMALI) ---
 
-// Giriş Sayfası
 app.get('/admin/login', (req, res) => res.render('login'));
 
-// Giriş Kontrolü
 app.post('/admin/login', (req, res) => {
     const { username, password } = req.body;
     if (username === "admin" && password === "yaman2026") {
-        req.session.adminGiris = true; // Oturumu mühürle
+        req.session.adminGiris = true;
         res.redirect('/admin/panel');
     } else {
         res.send("<script>alert('Hatalı giriş!'); window.location='/admin/login';</script>");
     }
 });
 
-// Admin Panel Ana Sayfa (Koruma Altında)
 app.get('/admin/panel', adminKontrol, async (req, res) => {
     try {
         const araclar = await Arac.find().sort({ eklenmeTarihi: -1 });
@@ -121,13 +138,16 @@ app.get('/admin/panel', adminKontrol, async (req, res) => {
     }
 });
 
-// İlan Ekleme Sayfası (Koruma Altında)
 app.get('/admin/ekle', adminKontrol, (req, res) => res.render('admin-ekle'));
 
-// İlan Kaydetme (Koruma Altında)
-app.post('/admin/ekle', adminKontrol, async (req, res) => {
+// --- İLAN KAYDETME (Cloudinary Entegrasyonlu) ---
+app.post('/admin/ekle', adminKontrol, upload, async (req, res) => {
     try {
-        const yeniArac = new Arac(req.body);
+        const yeniVeri = req.body;
+        if (req.files) {
+            yeniVeri.resimler = req.files.map(file => file.path);
+        }
+        const yeniArac = new Arac(yeniVeri);
         await yeniArac.save();
         res.redirect('/admin/panel');
     } catch (err) {
@@ -135,7 +155,30 @@ app.post('/admin/ekle', adminKontrol, async (req, res) => {
     }
 });
 
-// İlan Silme (Koruma Altında)
+// --- İLAN DÜZENLEME SAYFASI ---
+app.get('/admin/duzenle/:id', adminKontrol, async (req, res) => {
+    try {
+        const arac = await Arac.findById(req.params.id);
+        res.render('admin-duzenle', { arac: arac });
+    } catch (err) {
+        res.redirect('/admin/panel');
+    }
+});
+
+// --- İLAN GÜNCELLEME (Cloudinary Entegrasyonlu) ---
+app.post('/admin/guncelle/:id', adminKontrol, upload, async (req, res) => {
+    try {
+        let guncelVeri = req.body;
+        if (req.files && req.files.length > 0) {
+            guncelVeri.resimler = req.files.map(file => file.path);
+        }
+        await Arac.findByIdAndUpdate(req.params.id, guncelVeri);
+        res.redirect('/admin/panel');
+    } catch (err) {
+        res.send("Güncelleme hatası.");
+    }
+});
+
 app.get('/admin/sil/:id', adminKontrol, async (req, res) => {
     try {
         await Arac.findByIdAndDelete(req.params.id);
@@ -145,7 +188,6 @@ app.get('/admin/sil/:id', adminKontrol, async (req, res) => {
     }
 });
 
-// Güvenli Çıkış
 app.get('/admin/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
@@ -153,4 +195,4 @@ app.get('/admin/logout', (req, res) => {
 
 // --- 7. PORT AYARI ---
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Yaman Auto ${PORT} portunda koruma altında!`));
+app.listen(PORT, () => console.log(`🚀 Yaman Auto ${PORT} portunda aktif!`));

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlanı Düzenle | Yaman Auto Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-form-container { max-width: 800px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--yaman-blue); }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        
+        /* Mevcut Fotoğraflar Alanı */
+        .current-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        .current-img-item {
+            position: relative;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .current-img-item img { width: 100%; height: 100%; object-fit: cover; }
+        .cover-tag { position: absolute; top: 2px; left: 2px; background: #2ecc71; color: white; font-size: 8px; padding: 2px 4px; border-radius: 3px; }
+
+        /* Yeni Yükleme Alanı */
+        .file-upload-wrapper {
+            border: 2px dashed var(--yaman-blue);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: #f0f4ff;
+            cursor: pointer;
+            position: relative;
+        }
+        .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .image-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
+        .preview-item { height: 120px; border-radius: 8px; overflow: hidden; border: 2px solid #2ecc71; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        .btn-update { width: 100%; background: var(--yaman-blue); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        .btn-update:hover { background: #002266; }
+    </style>
+</head>
+<body style="background: #f4f7f6;">
+
+    <div class="admin-form-container">
+        <h2 style="text-align: center; color: var(--yaman-blue); margin-bottom: 25px;">
+            <i class="fas fa-edit"></i> İlanı Düzenle
+        </h2>
+        
+        <form action="/admin/guncelle/<%= arac._id %>" method="POST" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Marka</label>
+                    <input type="text" name="marka" value="<%= arac.marka %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" name="model" value="<%= arac.model %>" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Yıl</label>
+                    <input type="number" name="yil" value="<%= arac.yil %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Fiyat (TL)</label>
+                    <input type="text" name="fiyat" value="<%= arac.fiyat %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Kilometre</label>
+                    <input type="text" name="km" value="<%= arac.km %>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Yakıt Türü</label>
+                <select name="yakit">
+                    <option value="Benzin" <%= arac.yakit === 'Benzin' ? 'selected' : '' %>>Benzin</option>
+                    <option value="Dizel" <%= arac.yakit === 'Dizel' ? 'selected' : '' %>>Dizel</option>
+                    <option value="LPG" <%= arac.yakit === 'LPG' ? 'selected' : '' %>>LPG</option>
+                    <option value="Hibrit" <%= arac.yakit === 'Hibrit' ? 'selected' : '' %>>Hibrit</option>
+                    <option value="Elektrik" <%= arac.yakit === 'Elektrik' ? 'selected' : '' %>>Elektrik</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Şu Anki Fotoğraflar</label>
+                <div class="current-images-grid">
+                    <% if(arac.resimler && arac.resimler.length > 0) { %>
+                        <% arac.resimler.forEach((img, index) => { %>
+                            <div class="current-img-item">
+                                <img src="<%= img %>">
+                                <% if(index === 0) { %><span class="cover-tag">KAPAK</span><% } %>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Fotoğrafları Güncelle (En fazla 15 adet seçin)</label>
+                <div class="file-upload-wrapper">
+                    <i class="fas fa-images" style="font-size: 30px; color: var(--yaman-blue); margin-bottom: 10px;"></i>
+                    <p>Yeni fotoğraflar seçmek için tıklayın</p>
+                    <input type="file" name="resimler" id="resimInput" class="file-input" multiple accept="image/*">
+                </div>
+                <div id="imagePreview" class="image-preview-grid"></div>
+                <p style="font-size: 11px; color: #d9534f; margin-top: 10px;">
+                    <i class="fas fa-exclamation-triangle"></i> Yeni fotoğraf seçerseniz, eskiler silinecek ve yenileri Cloudinary'ye mühürlenecektir.
+                </p>
+            </div>
+            
+            <button type="submit" class="btn-update">DEĞİŞİKLİKLERİ MÜHÜRLE</button>
+            <a href="/admin/panel" style="display:block; text-align:center; margin-top:15px; color:#666; text-decoration:none; font-size:13px;">Vazgeç</a>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('resimInput').addEventListener('change', function(e) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            const files = Array.from(e.target.files).slice(0, 15);
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `<img src="${event.target.result}">`;
+                    preview.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+</body>
+</html>

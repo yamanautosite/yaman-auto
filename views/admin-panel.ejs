@@ -12,10 +12,18 @@
         .admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .admin-table th, .admin-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
         .admin-table th { background: var(--yaman-blue); color: white; }
-        .car-img-sm { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; }
-        .btn-add { background: #2ecc71; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
-        .btn-delete { color: #e74c3c; cursor: pointer; border: none; background: none; font-size: 18px; }
+        .car-img-sm { width: 70px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
+        .btn-add { background: #2ecc71; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn-add:hover { background: #27ae60; transform: translateY(-2px); }
+        
+        /* İşlem Butonları */
+        .actions-cell { display: flex; gap: 15px; align-items: center; }
+        .btn-edit { color: var(--yaman-blue); font-size: 18px; transition: 0.3s; }
+        .btn-edit:hover { color: var(--yaman-light-blue); }
+        .btn-delete { color: #e74c3c; cursor: pointer; border: none; background: none; font-size: 18px; transition: 0.3s; }
         .btn-delete:hover { color: #c0392b; }
+        
+        .badge-count { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 11px; color: #666; }
     </style>
 </head>
 <body style="background: #f8f9fa;">
@@ -24,8 +32,9 @@
         <div class="admin-header">
             <h2><i class="fas fa-tools"></i> İlan Yönetim Paneli</h2>
             <div>
-                <a href="/" class="btn-go-detail" style="background: #666; margin-right: 10px;">Siteye Git</a>
+                <a href="/" class="btn-hero" style="background: #666; color: white; border: none; margin-right: 10px; padding: 10px 20px;">Siteye Git</a>
                 <a href="/admin/ekle" class="btn-add"><i class="fas fa-plus"></i> Yeni İlan Ekle</a>
+                <a href="/admin/logout" style="margin-left: 15px; color: #e74c3c; text-decoration: none; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
             </div>
         </div>
 
@@ -43,12 +52,26 @@
                 <% if(araclar.length > 0) { %>
                     <% araclar.forEach(arac => { %>
                         <tr>
-                            <td><img src="<%= arac.resim %>" class="car-img-sm"></td>
-                            <td><strong><%= arac.yil %> <%= arac.marka %> <%= arac.model %></strong></td>
-                            <td><span style="color: #2ecc71; font-weight: bold;"><%= arac.fiyat %></span></td>
-                            <td style="font-size: 13px; color: #666;"><%= arac.km %> KM | <%= arac.yakit %></td>
                             <td>
-                                <a href="/admin/sil/<%= arac.id %>" onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?')" class="btn-delete">
+                                <% if(arac.resimler && arac.resimler.length > 0) { %>
+                                    <img src="<%= arac.resimler[0] %>" class="car-img-sm">
+                                    <span class="badge-count"><i class="fas fa-camera"></i> <%= arac.resimler.length %></span>
+                                <% } else { %>
+                                    <img src="/images/logo.png" class="car-img-sm">
+                                <% } %>
+                            </td>
+                            <td><strong><%= arac.yil %> <%= arac.marka %> <%= arac.model %></strong></td>
+                            <td><span style="color: #2ecc71; font-weight: bold;"><%= arac.fiyat %> ₺</span></td>
+                            <td style="font-size: 13px; color: #666;"><%= arac.km %> KM | <%= arac.yakit %></td>
+                            <td class="actions-cell">
+                                <a href="/admin/duzenle/<%= arac._id %>" class="btn-edit" title="İlanı Düzenle">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <a href="/admin/sil/<%= arac._id %>" 
+                                   class="btn-delete" 
+                                   title="İlanı Sil"
+                                   onclick="return confirm('<%= arac.marka %> <%= arac.model %> ilanını kalıcı olarak silmek istediğinize emin misiniz?');">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>
@@ -56,12 +79,17 @@
                     <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 50px; color: #999;">Henüz hiç ilan eklenmemiş.</td>
+                        <td colspan="5" style="text-align: center; padding: 50px; color: #999;">
+                            <i class="fas fa-folder-open" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+                            Henüz hiç ilan eklenmemiş.
+                        </td>
                     </tr>
                 <% } %>
             </tbody>
         </table>
     </div>
+
+    
 
 </body>
 </html>

@@ -30,24 +30,29 @@
 
     <main class="container detail-layout">
         <div class="detail-container">
-            <div class="detail-gallery-wrapper">
+            
+            <div class="yaman-slider-container">
                 <a href="/" id="backButton" class="btn-all-cars">
                     <i class="fas fa-arrow-left"></i> Tüm Araçlar
                 </a>
                 
-                <div class="detail-gallery">
-                    <img src="<%= arac.resim %>" alt="<%= arac.marka %> <%= arac.model %>" class="detail-slide active">
-                    <img src="<%= arac.resim %>" alt="Görsel 2" class="detail-slide">
-                    <img src="<%= arac.resim %>" alt="Görsel 3" class="detail-slide">
-                </div>
+                <button class="slider-arrow prev-arrow" onclick="changeSlide(-1)">❮</button>
+                <button class="slider-arrow next-arrow" onclick="changeSlide(1)">❯</button>
 
-                <button class="gallery-arrow prev-gallery" onclick="changeDetailSlide(-1)">❮</button>
-                <button class="gallery-arrow next-gallery" onclick="changeDetailSlide(1)">❯</button>
+                <% if(arac.resimler && arac.resimler.length > 0) { %>
+                    <% arac.resimler.forEach((img, index) => { %>
+                        <img src="<%= img %>" 
+                             alt="<%= arac.marka %> <%= arac.model %> - <%= index + 1 %>" 
+                             class="yaman-slide <%= index === 0 ? 'active' : '' %>">
+                    <% }) %>
+                <% } else { %>
+                    <img src="/images/logo.png" alt="Yaman Auto" class="yaman-slide active" style="object-fit: contain; padding: 20px;">
+                <% } %>
             </div>
 
             <div class="detail-info">
                 <h1><%= arac.yil %> <%= arac.marka %> <%= arac.model %></h1>
-                <div class="detail-price"><%= arac.fiyat %></div>
+                <div class="detail-price"><%= arac.fiyat %> ₺</div>
                 
                 <table class="specs-table">
                     <tr><td><i class="fas fa-tachometer-alt"></i> Kilometre</td><td><%= arac.km %> KM</td></tr>
@@ -72,14 +77,14 @@
                 </div>
 
                 <div class="extra-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-                    <a href="https://api.whatsapp.com/send?text=<%= encodedPaylas %> http://localhost:3000/arac/<%= arac.id %>" 
+                    <a href="https://api.whatsapp.com/send?text=<%= encodedPaylas %> https://yaman-auto.onrender.com/arac/<%= arac.id %>" 
                        target="_blank" 
                        style="display: block; text-align: center; color: #555; text-decoration: none; font-size: 14px; border: 1px solid #ddd; padding: 12px; border-radius: 8px; transition: 0.3s;"
                        onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
                         <i class="fas fa-share-alt"></i> Bu Aracı Arkadaşınla Paylaş
                     </a>
 
-                    <a href="https://www.google.com/maps/search/?api=1&query=YAMAN+AUTO+GROUP+Bağcılar+İstanbul&query_place_id=ChIJIZ--rW2xyhQR5EQTrzMujSE" 
+                    <a href="https://maps.google.com/?q=Mahmutbey,Bağcılar,İstanbul" 
                        target="_blank" 
                        style="display: block; text-align: center; background: #f8f9fa; color: #333; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #eee; transition: 0.3s;"
                        onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
@@ -103,23 +108,23 @@
             const backBtn = document.getElementById('backButton');
 
             if (fromSource === 'inventory') {
-                // Galeriden gelindiyse Satılık Araçlar'a döndürür
                 backBtn.href = "/satilik-araclar";
             } else {
-                // Ana sayfadan gelindiyse #araclar bölümüne döndürür
                 backBtn.href = "/#araclar";
             }
         });
 
-        // SLIDER FONKSİYONLARI
-        let currentDetailSlide = 0;
-        const detailSlides = document.querySelectorAll('.detail-slide');
-        const totalDetailSlides = detailSlides.length;
+        // SLIDER FONKSİYONLARI (GÜNCELLENDİ)
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.yaman-slide');
+        const totalSlides = slides.length;
 
-        function changeDetailSlide(direction) {
-            detailSlides[currentDetailSlide].classList.remove('active');
-            currentDetailSlide = (currentDetailSlide + direction + totalDetailSlides) % totalDetailSlides;
-            detailSlides[currentDetailSlide].classList.add('active');
+        function changeSlide(direction) {
+            if (totalSlides <= 1) return; // Tek resim varsa oklar çalışmasın
+
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
         }
     </script>
 
