@@ -21,17 +21,17 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'yaman-auto',
-        allowed_formats: ['jpg', 'png', 'jpeg'],
+        // KRİTİK GÜNCELLEME: webp formatı izne eklendi
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'], 
     },
 });
 
-// Hata ayıklama için multer'ı bir değişken olarak tanımlıyoruz
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 } // Dosya başı 5MB sınırı
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB sınırı (Büyük ilanlar için esnetildi)
 }).array('resimler', 15);
 
-// --- ARAÇ MODELİ (Mühürlü Şema) ---
+// --- ARAÇ MODELİ ---
 const aracSchema = new mongoose.Schema({
     marka: String,
     model: String,
@@ -39,7 +39,7 @@ const aracSchema = new mongoose.Schema({
     km: String,
     yil: String,
     yakit: String,
-    resimler: [String], // URL listesi
+    resimler: [String], 
     eklenmeTarihi: { type: Date, default: Date.now }
 });
 const Arac = mongoose.model('Arac', aracSchema);
@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: 'yaman_auto_ozel_anahtar',
     resave: false,
-    saveUninitialized: false, // Bellek uyarısını önlemek için false
+    saveUninitialized: false, 
     cookie: { maxAge: 3600000 }
 }));
 
@@ -67,7 +67,6 @@ const adminKontrol = (req, res, next) => {
 };
 
 // --- MONGODB BAĞLANTISI ---
-// process.env.MONGODB_URI'nin Render üzerinde tanımlı olduğundan emin ol!
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('🚀 Yaman Auto Kasası Güvenle Bağlandı!'))
     .catch((err) => console.log('❌ Kasa Bağlantı Hatası:', err.message));
@@ -130,16 +129,16 @@ app.get('/admin/panel', adminKontrol, async (req, res) => {
 
 app.get('/admin/ekle', adminKontrol, (req, res) => res.render('admin-ekle'));
 
-// --- İLAN KAYDETME (TAMİR EDİLDİ) ---
+// --- İLAN KAYDETME ---
 app.post('/admin/ekle', adminKontrol, (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             console.error("YÜKLEME HATASI:", err);
-            return res.status(500).send("Fotoğraflar yüklenemedi: " + err.message);
+            return res.status(500).send("Fotoğraflar Cloudinary'ye mühürlenemedi: " + err.message);
         }
         try {
             const yeniVeri = { ...req.body };
-            if (req.files) {
+            if (req.files && req.files.length > 0) {
                 yeniVeri.resimler = req.files.map(file => file.path);
             }
             const yeniArac = new Arac(yeniVeri);
@@ -147,7 +146,7 @@ app.post('/admin/ekle', adminKontrol, (req, res) => {
             res.redirect('/admin/panel');
         } catch (dbErr) {
             console.error("VERİTABANI HATASI:", dbErr);
-            res.status(500).send("İlan kaydedilemedi: " + dbErr.message);
+            res.status(500).send("Veritabanı kaydı başarısız.");
         }
     });
 });
@@ -159,7 +158,7 @@ app.get('/admin/duzenle/:id', adminKontrol, async (req, res) => {
     } catch (err) { res.redirect('/admin/panel'); }
 });
 
-// --- İLAN GÜNCELLEME (TAMİR EDİLDİ) ---
+// --- İLAN GÜNCELLEME ---
 app.post('/admin/guncelle/:id', adminKontrol, (req, res) => {
     upload(req, res, async (err) => {
         if (err) return res.status(500).send("Güncelleme sırasında yükleme hatası.");
